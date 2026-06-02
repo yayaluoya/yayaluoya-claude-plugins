@@ -14,6 +14,6 @@ export function getProjectRootDir() {
 /**
  * 产品目录：打包后的插件输出到这里
  */
-export function getMarketplaceDir() {
-  return path.join(getProjectRootDir(), "./marketplace");
+export function getPluginsDir() {
+  return path.join(getProjectRootDir(), "./plugins");
 }

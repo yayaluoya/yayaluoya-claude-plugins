@@ -1,7 +1,7 @@
 {
   "name": "yayaluoya-claude-plugins",
   "version": "1.0.0",
-  "description": "yayaluoya 的 Claude Code 插件市场 — 单仓 monorepo，源码在 packages/，打包输出到 marketplace/",
+  "description": "yayaluoya 的 Claude Code 插件市场 — 单仓 monorepo，源码在 packages/，打包输出到 plugins/",
   "type": "module",
   "private": true,
   "scripts": {
