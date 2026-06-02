@@ -1,0 +1,23 @@
+{
+  "name": "yayaluoya-claude-plugins",
+  "version": "1.0.0",
+  "description": "yayaluoya 的 Claude Code 插件市场 — 单仓 monorepo，源码在 packages/，打包输出到 marketplace/",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "build": "turbo run build package",
+    "bp": "turbo run build package"
+  },
+  "keywords": [
+    "claude-code",
+    "plugin",
+    "marketplace",
+    "yayaluoya"
+  ],
+  "author": "yayaluoya",
+  "license": "MIT",
+  "packageManager": "pnpm@9.11.0",
+  "devDependencies": {
+    "turbo": "^2.5.0"
+  }
+}

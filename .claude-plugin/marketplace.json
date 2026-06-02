@@ -1,0 +1,21 @@
+{
+  "name": "yayaluoya-claude-plugins",
+  "owner": {
+    "name": "yayaluoya"
+  },
+  "metadata": {
+    "description": "yayaluoya 的 Claude Code 插件市场",
+    "version": "1.0.0"
+  },
+  "plugins": [
+    {
+      "name": "hello-world",
+      "source": "./marketplace/hello-world",
+      "description": "示例插件 — 演示斜杠命令和技能的基本结构",
+      "version": "1.0.0",
+      "author": {
+        "name": "yayaluoya"
+      }
+    }
+  ]
+}

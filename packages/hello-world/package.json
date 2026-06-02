@@ -1,0 +1,14 @@
+{
+  "name": "@yayaluoya-claude-plugins/hello-world",
+  "version": "1.0.0",
+  "description": "示例插件 — 演示斜杠命令和技能的基本结构",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "build": "echo \"[hello-world] 纯 markdown 插件，无需构建\"",
+    "package": "package . hello-world"
+  },
+  "devDependencies": {
+    "@yayaluoya-claude-plugins/scripts": "workspace:^"
+  }
+}

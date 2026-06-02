@@ -1,0 +1,7 @@
+node_modules/
+.turbo/
+*.log
+
+# 产品目录里的插件内容是构建产物，不入库（保留目录占位）
+marketplace/*/
+!marketplace/.gitkeep
