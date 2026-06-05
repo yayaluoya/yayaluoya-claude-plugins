@@ -18,7 +18,7 @@ importers:
         specifier: ^6.0.3
         version: 6.0.3
 
-  packages/auto-allow-bash:
+  packages/auto-allow-bash-plugin:
     dependencies:
       '@yayaluoya-claude-plugins/shared':
         specifier: workspace:^

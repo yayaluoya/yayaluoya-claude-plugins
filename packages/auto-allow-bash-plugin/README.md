@@ -1,4 +1,4 @@
-# auto-allow-bash
+# auto-allow-bash-plugin
 
 自动放行只读 Bash 命令的 Claude Code 插件。
 

@@ -18,8 +18,8 @@
       }
     },
     {
-      "name": "auto-allow-bash",
-      "source": "./packages/auto-allow-bash",
+      "name": "auto-allow-bash-plugin",
+      "source": "./packages/auto-allow-bash-plugin",
       "description": "自动放行只读 Bash 命令 — 本地正则 + LLM 双重判定",
       "version": "1.0.0",
       "author": {
