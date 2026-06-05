@@ -3,9 +3,11 @@
   "tasks": {
     "build": {
       "dependsOn": ["^build"],
-      "cache": true
+      "cache": true,
+      "outputs": ["dist/**"]
     },
     "test": {
+      "dependsOn": ["build"],
       "cache": true
     },
     "typecheck": {
