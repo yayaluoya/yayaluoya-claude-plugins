@@ -30,8 +30,6 @@ importers:
         specifier: workspace:^
         version: link:../shared
 
-  packages/hello-world: {}
-
   packages/shared:
     dependencies:
       '@anthropic-ai/sdk':
