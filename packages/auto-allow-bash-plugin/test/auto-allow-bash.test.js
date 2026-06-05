@@ -5,7 +5,7 @@ import { fileURLToPath } from 'node:url';
 import path from 'node:path';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const DIST = path.resolve(__dirname, '../dist/auto-allow-bash.js');
+const DIST = path.resolve(__dirname, '../src/bin/auto-allow-bash.js');
 
 /**
  * 模拟 Claude Code 调用 hook：把 JSON 写入 stdin，收集 stdout 输出。

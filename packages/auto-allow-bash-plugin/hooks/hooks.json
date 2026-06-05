@@ -6,7 +6,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "node \"${CLAUDE_PLUGIN_ROOT}/dist/auto-allow-bash.js\"",
+            "command": "node \"${CLAUDE_PLUGIN_ROOT}/src/bin/auto-allow-bash.js\"",
             "statusMessage": "命令自动放行…"
           }
         ]
