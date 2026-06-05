@@ -3,7 +3,7 @@
   "version": "0.1.7",
   "description": "通用工具包 — LLM 调用等可复用工具",
   "type": "module",
-  "private": false,
+  "private": true,
   "repository": {
     "type": "git",
     "url": "https://github.com/yayaluoya/yayaluoya-claude-plugins.git"
