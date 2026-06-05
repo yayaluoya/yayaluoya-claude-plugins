@@ -1,6 +1,6 @@
 {
   "name": "@yayaluoya-claude-plugins/shared",
-  "version": "0.1.8",
+  "version": "0.1.9",
   "description": "通用工具包 — LLM 调用等可复用工具",
   "type": "module",
   "private": true,
