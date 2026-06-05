@@ -1,9 +1,13 @@
 {
   "name": "@yayaluoya-claude-plugins/auto-allow-bash-plugin",
-  "version": "1.0.0",
+  "version": "0.0.0",
   "description": "自动放行只读 Bash 命令 — 本地正则 + LLM 双重判定",
   "type": "module",
   "private": false,
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yayaluoya/yayaluoya-claude-plugins.git"
+  },
   "scripts": {
     "build": "esbuild src/bin/auto-allow-bash.js --bundle --platform=node --format=esm --outfile=dist/auto-allow-bash.js",
     "test": "node --test test/auto-allow-bash.test.js",
