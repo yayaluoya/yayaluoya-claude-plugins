@@ -1,6 +1,6 @@
 {
   "name": "@yayaluoya-claude-plugins/hello-world",
-  "version": "0.0.0",
+  "version": "0.1.3",
   "description": "示例插件 — 演示斜杠命令和技能的基本结构",
   "type": "module",
   "private": false,
