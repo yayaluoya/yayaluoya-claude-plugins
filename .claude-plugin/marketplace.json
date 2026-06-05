@@ -1,12 +1,13 @@
 {
   "_comment": "此文件由 .node/update-marketplace.js 自动生成，请勿手动修改",
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
   "name": "yayaluoya-claude-plugins",
   "owner": {
     "name": "yayaluoya"
   },
   "metadata": {
     "description": "yayaluoya 的 Claude Code 插件市场",
-    "version": "0.1.5"
+    "version": "0.1.6"
   },
   "plugins": [
     {
@@ -14,7 +15,7 @@
       "source": {
         "source": "npm",
         "package": "@yayaluoya-claude-plugins/auto-allow-bash-plugin",
-        "version": "0.1.5"
+        "version": "0.1.6"
       },
       "description": "自动放行只读 Bash 命令 — 本地正则 + LLM 双重判定，非只读命令仍需人工确认",
       "author": {
@@ -26,7 +27,7 @@
       "source": {
         "source": "npm",
         "package": "@yayaluoya-claude-plugins/hello-world",
-        "version": "0.1.5"
+        "version": "0.1.6"
       },
       "description": "示例插件 — 演示斜杠命令和技能的基本结构",
       "author": {
