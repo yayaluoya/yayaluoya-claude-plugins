@@ -51,8 +51,23 @@ jobs:
       - name: 更新 marketplace.json
         run: node ./.node/update-marketplace.js
 
+      - name: 发布前移除依赖字段
+        run: |
+          cp packages/auto-allow-bash-plugin/package.json packages/auto-allow-bash-plugin/package.json.bak
+          node -e "
+            const fs = require('fs');
+            const pkgPath = './packages/auto-allow-bash-plugin/package.json';
+            const pkg = JSON.parse(fs.readFileSync(pkgPath, 'utf8'));
+            delete pkg.dependencies;
+            delete pkg.devDependencies;
+            fs.writeFileSync(pkgPath, JSON.stringify(pkg, null, 2));
+          "
+
       - name: 发布插件到 npm
         run: pnpm publish -r --access public --no-git-checks
+
+      - name: 发布后还原 package.json
+        run: mv packages/auto-allow-bash-plugin/package.json.bak packages/auto-allow-bash-plugin/package.json
 
       - name: 提交版本号变更
         id: version_commit
