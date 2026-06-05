@@ -75,5 +75,6 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add package.json packages/*/package.json .claude-plugin/marketplace.json
-          git commit -m "chore: 迭代版本号 v$(node -p \"require('./package.json').version\")"
+          VERSION=$(node -p "require('./package.json').version")
+          git commit -m "chore: 迭代版本号 v${VERSION}"
           git push
