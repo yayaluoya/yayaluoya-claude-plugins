@@ -1,4 +1,5 @@
 {
+  "_comment": "此文件由 .node/update-marketplace.js 自动生成，请勿手动修改",
   "name": "yayaluoya-claude-plugins",
   "owner": {
     "name": "yayaluoya"
@@ -9,19 +10,27 @@
   },
   "plugins": [
     {
-      "name": "hello-world",
-      "source": "./packages/hello-world",
-      "description": "示例插件 — 演示斜杠命令和技能的基本结构",
-      "version": "1.0.0",
+      "name": "auto-allow-bash-plugin",
+      "source": {
+        "source": "npm",
+        "package": "@yayaluoya-claude-plugins/auto-allow-bash-plugin",
+        "version": "^0.0.0"
+      },
+      "description": "自动放行只读 Bash 命令 — 本地正则 + LLM 双重判定，非只读命令仍需人工确认",
+      "version": "0.0.0",
       "author": {
         "name": "yayaluoya"
       }
     },
     {
-      "name": "auto-allow-bash-plugin",
-      "source": "./packages/auto-allow-bash-plugin",
-      "description": "自动放行只读 Bash 命令 — 本地正则 + LLM 双重判定",
-      "version": "1.0.0",
+      "name": "hello-world",
+      "source": {
+        "source": "npm",
+        "package": "@yayaluoya-claude-plugins/hello-world",
+        "version": "^0.0.0"
+      },
+      "description": "示例插件 — 演示斜杠命令和技能的基本结构",
+      "version": "0.0.0",
       "author": {
         "name": "yayaluoya"
       }

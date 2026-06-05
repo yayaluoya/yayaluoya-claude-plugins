@@ -48,8 +48,19 @@ jobs:
       - name: 迭代版本号
         run: node ./.node/iteration-version.js -m ${{ vars.MAJOR_VN }} -n ${{ vars.MINOR_VN }}
 
+      - name: 更新 marketplace.json
+        run: node ./.node/update-marketplace.js
+
       - name: 发布插件到 npm
         run: pnpm publish -r --access public --no-git-checks
+
+      - name: 提交版本号变更
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add package.json packages/*/package.json .claude-plugin/marketplace.json
+          git commit -m "chore: 迭代版本号 v$(node -p \"require('./package.json').version\")"
+          git push
 
       - name: 读取版本号
         id: read_version
