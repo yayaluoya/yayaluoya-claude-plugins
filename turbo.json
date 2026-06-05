@@ -6,9 +6,9 @@
       "cache": true,
       "outputs": ["dist/**"]
     },
-    "package": {
-      "dependsOn": ["build", "^package"],
-      "cache": false
+    "typecheck": {
+      "dependsOn": ["^typecheck"],
+      "cache": true
     }
   }
 }

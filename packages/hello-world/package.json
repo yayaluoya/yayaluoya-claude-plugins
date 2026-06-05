@@ -5,10 +5,6 @@
   "type": "module",
   "private": true,
   "scripts": {
-    "build": "echo \"[hello-world] 纯 markdown 插件，无需构建\"",
-    "package": "package . hello-world"
-  },
-  "devDependencies": {
-    "@yayaluoya-claude-plugins/scripts": "workspace:^"
+    "build": "echo \"[hello-world] 纯 markdown 插件，无需构建\""
   }
 }

@@ -1,0 +1,17 @@
+{
+  "name": "@yayaluoya-claude-plugins/shared",
+  "version": "1.0.0",
+  "description": "通用工具包 — LLM 调用等可复用工具",
+  "type": "module",
+  "private": true,
+  "exports": {
+    "./llm": "./src/llm/index.js"
+  },
+  "scripts": {
+    "build": "echo \"[shared] 纯 JS，无需构建\"",
+    "typecheck": "tsc -p tsconfig.json"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.99.0"
+  }
+}

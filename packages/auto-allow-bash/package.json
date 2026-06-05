@@ -1,0 +1,14 @@
+{
+  "name": "@yayaluoya-claude-plugins/auto-allow-bash",
+  "version": "1.0.0",
+  "description": "自动放行只读 Bash 命令 — 本地正则 + LLM 双重判定",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "build": "echo \"[auto-allow-bash] 纯 JS 插件，无需构建\"",
+    "typecheck": "tsc -p tsconfig.json"
+  },
+  "dependencies": {
+    "@yayaluoya-claude-plugins/shared": "workspace:^"
+  }
+}
