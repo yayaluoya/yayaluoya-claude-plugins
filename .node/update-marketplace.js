@@ -40,6 +40,8 @@ for (const packageDir of packageDirList) {
 
 const marketplace = {
   _comment: '此文件由 .node/update-marketplace.js 自动生成，请勿手动修改',
+  //
+  $schema: "https://anthropic.com/claude-code/marketplace.schema.json",
   name: rootPackageJson.name,
   owner: {
     name: rootPackageJson.repository.owner,
