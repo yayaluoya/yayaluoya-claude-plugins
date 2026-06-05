@@ -6,7 +6,7 @@
   },
   "metadata": {
     "description": "yayaluoya 的 Claude Code 插件市场",
-    "version": "0.1.4"
+    "version": "0.1.5"
   },
   "plugins": [
     {
@@ -14,10 +14,9 @@
       "source": {
         "source": "npm",
         "package": "@yayaluoya-claude-plugins/auto-allow-bash-plugin",
-        "version": "^0.1.4"
+        "version": "0.1.5"
       },
       "description": "自动放行只读 Bash 命令 — 本地正则 + LLM 双重判定，非只读命令仍需人工确认",
-      "version": "0.1.4",
       "author": {
         "name": "yayaluoya"
       }
@@ -27,10 +26,9 @@
       "source": {
         "source": "npm",
         "package": "@yayaluoya-claude-plugins/hello-world",
-        "version": "^0.1.4"
+        "version": "0.1.5"
       },
       "description": "示例插件 — 演示斜杠命令和技能的基本结构",
-      "version": "0.1.4",
       "author": {
         "name": "yayaluoya"
       }
