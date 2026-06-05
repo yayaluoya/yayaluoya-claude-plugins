@@ -70,7 +70,14 @@ async function iterationVersion(options) {
     const pkgJson = JSON.parse(fs.readFileSync(pkgJsonPath).toString());
     pkgJson.version = newVersion;
     fs.writeFileSync(pkgJsonPath, JSON.stringify(pkgJson, null, 2));
-    console.log(`updated ${packageDir} -> ${newVersion}`);
+    console.log(`updated ${packageDir}/package.json -> ${newVersion}`);
+
+    const pluginJsonPath = path.join(packagesDir, packageDir, '.claude-plugin', 'plugin.json');
+    if (!fs.statSync(pluginJsonPath, { throwIfNoEntry: false })?.isFile()) continue;
+    const pluginJson = JSON.parse(fs.readFileSync(pluginJsonPath).toString());
+    pluginJson.version = newVersion;
+    fs.writeFileSync(pluginJsonPath, JSON.stringify(pluginJson, null, 2));
+    console.log(`updated ${packageDir}/plugin.json -> ${newVersion}`);
   }
 }
 
