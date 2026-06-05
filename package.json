@@ -4,8 +4,15 @@
   "description": "yayaluoya 的 Claude Code 插件市场",
   "type": "module",
   "private": true,
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yayaluoya/yayaluoya-claude-plugins.git",
+    "owner": "yayaluoya",
+    "repo": "yayaluoya-claude-plugins"
+  },
   "scripts": {
     "build": "turbo run build",
+    "test": "turbo run test",
     "typecheck": "turbo run typecheck"
   },
   "keywords": [
@@ -19,6 +26,8 @@
   "packageManager": "pnpm@9.11.0",
   "devDependencies": {
     "@types/node": "^25.9.1",
+    "commander": "^14.0.0",
+    "semver": "^7.7.2",
     "turbo": "^2.5.0",
     "typescript": "^6.0.3"
   }
