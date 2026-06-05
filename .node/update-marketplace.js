@@ -31,10 +31,9 @@ for (const packageDir of packageDirList) {
     source: {
       source: 'npm',
       package: pkgJson.name,
-      version: `^${pkgJson.version}`,
+      version: pkgJson.version,
     },
     description: pluginJson.description || pkgJson.description || '',
-    version: pkgJson.version,
     author: pluginJson.author || { name: rootPackageJson.author },
   });
 }

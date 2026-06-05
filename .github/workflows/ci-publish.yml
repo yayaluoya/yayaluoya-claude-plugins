@@ -55,6 +55,7 @@ jobs:
         run: pnpm publish -r --access public --no-git-checks
 
       - name: 提交版本号变更
+        id: version_commit
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
@@ -62,19 +63,16 @@ jobs:
           VERSION=$(node -p "require('./package.json').version")
           git commit -m "chore: 迭代版本号 v${VERSION}"
           git push
-
-      - name: 读取版本号
-        id: read_version
-        run: |
-          VERSION=$(node -p "require('./package.json').version")
           echo "VERSION=${VERSION}" >> $GITHUB_OUTPUT
+          echo "sha=$(git rev-parse HEAD)" >> $GITHUB_OUTPUT
 
       - name: 创建 GitHub Release
         uses: actions/create-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: v${{ steps.read_version.outputs.VERSION }}
-          release_name: Release v${{ steps.read_version.outputs.VERSION }}
+          tag_name: v${{ steps.version_commit.outputs.VERSION }}
+          release_name: Release v${{ steps.version_commit.outputs.VERSION }}
+          commitish: ${{ steps.version_commit.outputs.sha }}
           draft: false
           prerelease: false
