@@ -6,6 +6,10 @@
       "cache": true,
       "outputs": ["dist/**"]
     },
+    "test": {
+      "dependsOn": ["build"],
+      "cache": true
+    },
     "typecheck": {
       "dependsOn": ["^typecheck"],
       "cache": true

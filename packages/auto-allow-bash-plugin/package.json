@@ -5,10 +5,14 @@
   "type": "module",
   "private": true,
   "scripts": {
-    "build": "echo \"[auto-allow-bash-plugin] 纯 JS 插件，无需构建\"",
+    "build": "esbuild src/bin/auto-allow-bash.js --bundle --platform=node --format=esm --outfile=dist/auto-allow-bash.js",
+    "test": "node --test test/auto-allow-bash.test.js",
     "typecheck": "tsc -p tsconfig.json"
   },
   "dependencies": {
     "@yayaluoya-claude-plugins/shared": "workspace:^"
+  },
+  "devDependencies": {
+    "esbuild": "^0.28.0"
   }
 }
