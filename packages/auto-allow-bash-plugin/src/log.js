@@ -1,19 +1,14 @@
 import fs from 'node:fs';
+import os from 'node:os';
 import path from 'node:path';
-import { fileURLToPath } from 'node:url';
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-const LOG_DIR = path.resolve(__dirname, '../log');
+const LOG_DIR = path.join(os.homedir(), '.claude', 'auto-allow-bash-plugin', 'log');
 
-/**
- * @param {Date} [d]
- */
 function getLogFile(d = new Date()) {
   /** @param {number} n */
   const p = (n) => String(n).padStart(2, '0');
   const date = `${d.getFullYear()}-${p(d.getMonth() + 1)}-${p(d.getDate())}`;
-  return path.join(LOG_DIR, `auto-allow-${date}.md`);
+  return path.join(LOG_DIR, `${date}.txt`);
 }
 
 /**
@@ -26,16 +21,6 @@ function formatTs(d) {
 }
 
 /**
- * @param {string} s
- */
-function fenceCode(s) {
-  const m = String(s).match(/`{3,}/g);
-  const max = m ? Math.max(...m.map((x) => x.length)) : 2;
-  const fence = '`'.repeat(Math.max(3, max + 1));
-  return `${fence}bash\n${s}\n${fence}`;
-}
-
-/**
  * 把字符串包成行内代码，转义内部反引号，供日志中展示 LLM 原始响应。
  * @param {unknown} s
  */
@@ -45,22 +30,19 @@ export function fenceInline(s) {
 }
 
 /**
- * 追加一条判定日志到当日的 Markdown 文件。
+ * 追加一条判定日志，每条记录一行。
+ * 格式：2026-06-09 14:23:01 [event/来源] cmd
  * @param {string} event 事件类型（recv/allow/ask/retry/error/fatal/skip）
- * @param {Record<string, any>} meta 元信息，cmd 字段会被渲染成代码块
+ * @param {Record<string, any>} meta
  */
 export function log(event, meta = {}) {
   const now = new Date();
-  const lines = [`## ${event}`, '', `时间：${formatTs(now)}`];
-  const order = ['来源', '判定', '模型', '耗时', '重试', '命令长度', 'LLM 响应', '详情'];
-  for (const key of order) {
-    if (meta[key] === undefined || meta[key] === null || meta[key] === '') continue;
-    lines.push(`${key}：${meta[key]}`);
-  }
-  if (meta.cmd) {
-    lines.push('', fenceCode(meta.cmd));
-  }
-  lines.push('', '');
+  const ts = formatTs(now);
+  const source = meta['来源'] ? `/${meta['来源']}` : '';
+  const tag = `[${event}${source}]`;
+  const cmd = meta.cmd ? ` ${meta.cmd.replace(/\n/g, ' ')}` : '';
+  const extra = meta['详情'] ? ` | ${meta['详情']}` : '';
+  const line = `${ts} ${tag}${cmd}${extra}\n`;
   fs.mkdirSync(LOG_DIR, { recursive: true });
-  fs.appendFileSync(getLogFile(now), lines.join('\n'));
+  fs.appendFileSync(getLogFile(now), line);
 }
