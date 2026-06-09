@@ -14,9 +14,11 @@
     "typecheck": "tsc -p tsconfig.json"
   },
   "dependencies": {
-    "@yayaluoya-claude-plugins/shared": "workspace:^"
+    "@yayaluoya-claude-plugins/shared": "workspace:^",
+    "js-yaml": "^4.2.0"
   },
   "devDependencies": {
+    "@types/js-yaml": "^4.0.9",
     "esbuild": "^0.28.0"
   }
 }
