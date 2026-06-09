@@ -1,6 +1,6 @@
 {
   "name": "auto-allow-bash-plugin",
-  "version": "0.1.9",
+  "version": "0.1.10",
   "description": "自动放行只读 Bash 命令 — 本地正则 + LLM 双重判定，非只读命令仍需人工确认",
   "author": {
     "name": "yayaluoya"
