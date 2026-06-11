@@ -1,6 +1,6 @@
 {
   "name": "yayaluoya-claude-plugins",
-  "version": "0.1.13",
+  "version": "0.1.14",
   "description": "yayaluoya 的 Claude Code 插件市场",
   "type": "module",
   "private": true,
