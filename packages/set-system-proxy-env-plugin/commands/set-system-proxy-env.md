@@ -6,11 +6,12 @@ description: 读取系统代理配置，写入或清除 ~/.claude/settings.json 
 
 ## 你的任务
 
-运行 `$CLAUDE_PLUGIN_ROOT/src/bin/set-system-proxy-env.js` 这个脚本：
-
-```bash
-node "$CLAUDE_PLUGIN_ROOT/src/bin/set-system-proxy-env.js"
-```
+1. 读取 `~/.claude/plugins/installed_plugins.json`，找到 `set-system-proxy-env-plugin@yayaluoya-claude-plugins` 的 `installPath`。
+2. 拼接脚本路径：`<installPath>/src/bin/set-system-proxy-env.js`
+3. 运行该脚本：
+   ```bash
+   node "<installPath>/src/bin/set-system-proxy-env.js"
+   ```
 
 脚本会自动完成以下工作：
 - 读取当前系统代理配置
