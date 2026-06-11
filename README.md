@@ -14,21 +14,22 @@ yayaluoya 的 Claude Code 插件市场。pnpm + turbo monorepo：每个插件作
 │   ├── iteration-version.js      # 拉取远端 tag 计算下一版本号，写回所有 package.json / plugin.json
 │   └── update-marketplace.js     # 扫描 packages/ 重新生成 marketplace.json
 ├── packages/
-│   ├── auto-allow-bash-plugin/   # 自动放行只读 Bash 命令的插件
-│   └── shared/                   # 内部工具包（LLM 调用等），不发布
+│   ├── auto-allow-bash-plugin/       # 自动放行只读 Bash 命令的插件
+│   ├── set-system-proxy-env-plugin/  # 手动同步系统代理配置到 env 的插件
+│   └── shared/                       # 内部工具包（LLM 调用等），不发布
 ├── package.json                  # 根工程
 ├── pnpm-workspace.yaml
 └── turbo.json
 ```
 
-每个插件包的标准结构：
+每个插件包的标准结构（hook 型）：
 
 ```
 packages/<plugin>/
 ├── .claude-plugin/
 │   └── plugin.json               # 插件清单（name / version / description / author）
 ├── hooks/
-│   └── hooks.json                # PreToolUse / PostToolUse 等 hook 注册
+│   └── hooks.json                # PreToolUse / PostToolUse / SessionStart 等 hook 注册
 ├── src/                          # 源码
 ├── test/                         # node --test 单元测试
 ├── dist/                         # esbuild 产物（hooks.json 中通过 ${CLAUDE_PLUGIN_ROOT}/dist/... 引用）
@@ -36,11 +37,25 @@ packages/<plugin>/
 └── tsconfig.json
 ```
 
+命令型插件（无 hook，提供 slash command）：
+
+```
+packages/<plugin>/
+├── .claude-plugin/
+│   └── plugin.json               # 插件清单
+├── commands/
+│   └── <command>.md              # slash command 定义，Claude 按此执行
+├── src/                          # 脚本源码（由 command 调用）
+├── package.json
+└── tsconfig.json
+```
+
 ## 现有插件
 
-| 插件 | 说明 |
-| --- | --- |
-| [`auto-allow-bash-plugin`](packages/auto-allow-bash-plugin) | 通过 `PreToolUse` hook 拦截 Bash 调用，本地正则 + Haiku 双重判定，只读命令直接放行，写操作仍需人工确认 |
+| 插件 | 类型 | 说明 |
+| --- | --- | --- |
+| [`auto-allow-bash-plugin`](packages/auto-allow-bash-plugin) | hook | 通过 `PreToolUse` hook 拦截 Bash 调用，本地正则 + Haiku 双重判定，只读命令直接放行，写操作仍需人工确认 |
+| [`set-system-proxy-env-plugin`](packages/set-system-proxy-env-plugin) | command | 提供 `/set-system-proxy-env` 命令，读取系统代理配置并写入或清除 `~/.claude/settings.json` 的 `env` 字段 |
 
 ## 常用命令
 
@@ -62,6 +77,7 @@ pnpm run test           # turbo: node --test 跑各包用例
 
 # 安装插件
 /plugin install auto-allow-bash-plugin@yayaluoya-claude-plugins
+/plugin install set-system-proxy-env-plugin@yayaluoya-claude-plugins
 ```
 
 ## 新增一个插件

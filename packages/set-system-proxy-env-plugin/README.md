@@ -2,6 +2,8 @@
 
 手动同步系统代理配置到 `~/.claude/settings.json` 的 `env` 字段。
 
+这是一个**命令型插件**（无 hook），需要主动触发。
+
 ## 使用方式
 
 在 Claude Code 中运行命令：
