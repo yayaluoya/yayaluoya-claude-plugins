@@ -9,7 +9,6 @@
     "url": "https://github.com/yayaluoya/yayaluoya-claude-plugins.git"
   },
   "scripts": {
-    "test": "node test/set-system-proxy-env.test.js",
     "typecheck": "tsc -p tsconfig.json"
   },
   "devDependencies": {
