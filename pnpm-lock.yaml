@@ -40,6 +40,12 @@ importers:
         specifier: ^0.28.0
         version: 0.28.0
 
+  packages/inject-system-proxy-plugin:
+    devDependencies:
+      esbuild:
+        specifier: ^0.28.0
+        version: 0.28.0
+
   packages/shared:
     dependencies:
       '@anthropic-ai/sdk':
