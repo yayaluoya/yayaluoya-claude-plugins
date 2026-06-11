@@ -40,11 +40,14 @@ importers:
         specifier: ^0.28.0
         version: 0.28.0
 
-  packages/inject-system-proxy-plugin:
+  packages/set-system-proxy-env-plugin:
     devDependencies:
-      esbuild:
-        specifier: ^0.28.0
-        version: 0.28.0
+      '@types/node':
+        specifier: ^25.9.1
+        version: 25.9.1
+      typescript:
+        specifier: ^6.0.3
+        version: 6.0.3
 
   packages/shared:
     dependencies:
