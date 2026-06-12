@@ -22,3 +22,9 @@
 | Windows | 注册表 `HKCU\Software\Microsoft\Windows\CurrentVersion\Internet Settings` |
 | macOS | `networksetup -getwebproxy Wi-Fi` |
 | Linux | `gsettings`（GNOME） |
+
+## 安装
+
+```bash
+/plugin install set-system-proxy-env-plugin@yayaluoya-claude-plugins
+```

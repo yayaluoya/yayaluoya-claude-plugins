@@ -1,0 +1,8 @@
+{
+  "name": "git-plugin",
+  "version": "0.1.14",
+  "description": "Git workflow commands — commit, and more",
+  "author": {
+    "name": "yayaluoya"
+  }
+}

@@ -11,6 +11,21 @@
 
 非只读命令（写文件、安装包、`git push`、`git commit` 等）始终需要人工确认。
 
+## 命令
+
+### `/auto-allow-bash-config`
+
+查看或修改 LLM 判定时使用的系统提示词，配置写入 `~/.claude/auto-allow-bash-plugin.md` 的 frontmatter：
+
+```markdown
+---
+system_prompt: |
+  你的自定义提示词
+---
+```
+
+未配置时使用内置默认值。输出控制指令（只输出 `allow`/`ask`）由插件内部强制追加，不需要写进 `system_prompt`。
+
 ## 前置条件
 
 认证信息按 **进程环境变量 → `~/.claude/settings.json` 的 `env`** 顺序读取，提供以下任一即可：
@@ -24,4 +39,10 @@
 
 ## 日志
 
-每日判定日志写入插件目录下的 `log/auto-allow-YYYY-MM-DD.md`，记录命令内容、判定来源（`local` / `llm`）、模型、耗时、重试次数等，便于事后审计和规则调优。
+每次判定追加一行到 `~/.claude/auto-allow-bash-plugin/log/<YYYY-MM-DD>.txt`，记录命令内容、判定来源（`local` / `llm`）、模型、耗时、重试次数等，便于事后审计和规则调优。
+
+## 安装
+
+```bash
+/plugin install auto-allow-bash-plugin@yayaluoya-claude-plugins
+```
