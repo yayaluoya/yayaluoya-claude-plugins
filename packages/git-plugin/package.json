@@ -1,6 +1,6 @@
 {
   "name": "@yayaluoya-claude-plugins/git-plugin",
-  "version": "0.1.14",
+  "version": "0.1.15",
   "description": "Git workflow commands — commit, and more",
   "type": "module",
   "private": false,
