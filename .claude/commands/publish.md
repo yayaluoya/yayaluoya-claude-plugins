@@ -22,8 +22,10 @@ git pull origin master
 ### 3. 合并 dev 分支
 
 ```bash
-git merge dev
+git merge --no-ff dev
 ```
+
+**必须使用 `--no-ff`**，即使可以快进也要创建一个新的合并提交，保留清晰的合并记录。
 
 若发生冲突，**停止并告知用户**，不要自动解决冲突。
 

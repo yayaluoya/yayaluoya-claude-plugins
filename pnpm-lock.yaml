@@ -40,6 +40,15 @@ importers:
         specifier: ^0.28.0
         version: 0.28.0
 
+  packages/git-plugin:
+    devDependencies:
+      '@types/node':
+        specifier: ^25.9.1
+        version: 25.9.1
+      typescript:
+        specifier: ^6.0.3
+        version: 6.0.3
+
   packages/set-system-proxy-env-plugin:
     devDependencies:
       '@types/node':
