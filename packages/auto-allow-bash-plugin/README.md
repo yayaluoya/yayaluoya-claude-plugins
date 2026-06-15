@@ -7,7 +7,7 @@
 通过 `PreToolUse` hook 拦截所有 `Bash` 工具调用，双重判定：
 
 1. **本地正则快速放行** — 对 `ls`、`cat`、`git status|diff|log`、`npm ls` 等显然只读的命令直接放行，零延迟，零成本。检测到 `>` / `>>` 重定向、命令替换、`sudo` 等危险特征会立即跳过本地放行。
-2. **LLM 兜底判定** — 正则未命中时调用 Haiku（`claude-haiku-4-5-20251001`）判断是否只读，最多重试 3 次。只读放行，否则回退到人工确认。
+2. **LLM 兜底判定** — 正则未命中时调用 LLM 判断是否只读，默认模型 Haiku（`claude-haiku-4-5-20251001`），可通过配置覆盖，最多重试 3 次。只读放行，否则回退到人工确认。
 
 非只读命令（写文件、安装包、`git push`、`git commit` 等）始终需要人工确认。
 
@@ -15,16 +15,17 @@
 
 ### `/auto-allow-bash-config`
 
-查看或修改 LLM 判定时使用的系统提示词，配置写入 `~/.claude/auto-allow-bash-plugin.md` 的 frontmatter：
+查看或修改 LLM 判定时使用的系统提示词和模型，配置写入 `~/.claude/auto-allow-bash-plugin.md` 的 frontmatter：
 
 ```markdown
 ---
+model: claude-haiku-4-5-20251001
 system_prompt: |
   你的自定义提示词
 ---
 ```
 
-未配置时使用内置默认值。输出控制指令（只输出 `allow`/`ask`）由插件内部强制追加，不需要写进 `system_prompt`。
+未配置时分别使用内置默认值（模型 `claude-haiku-4-5-20251001`）。输出控制指令（只输出 `allow`/`ask`）由插件内部强制追加，不需要写进 `system_prompt`。
 
 ## 前置条件
 
