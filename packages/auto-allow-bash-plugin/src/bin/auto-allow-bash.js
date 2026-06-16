@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 import { oneShot } from '@yayaluoya-claude-plugins/shared/llm';
-import { log, fenceInline } from '../log.js';
+import { log } from '../log.js';
 import { localClassify } from '../local-classify.js';
 import { loadConfig } from '../config.js';
 
@@ -22,7 +22,7 @@ function errMsg(e) {
 
 main().catch((e) => {
   const reason = `自动放行判定异常: ${errMsg(e)}`;
-  log('fatal', { 详情: reason });
+  log('fatal', { detail: reason });
   emit('ask', reason);
 });
 
@@ -35,14 +35,14 @@ async function main() {
   } catch {}
 
   if (!cmd.trim()) {
-    log('skip', { 详情: '命令为空或解析失败' });
+    log('skip', { detail: '命令为空或解析失败' });
     return emit('ask', '命令为空或解析失败');
   }
 
-  log('recv', { cmd, 命令长度: cmd.length });
+  log('recv', { cmd });
 
   if (localClassify(cmd) === 'allow') {
-    log('allow', { cmd, 来源: 'local', 判定: 'allow', 命令长度: cmd.length, 详情: REASON_LOCAL_ALLOW });
+    log('allow', { cmd, source: 'local', detail: REASON_LOCAL_ALLOW });
     return emit('allow', REASON_LOCAL_ALLOW);
   }
 
@@ -52,21 +52,11 @@ async function main() {
     const result = await classifyWithRetry(cmd, model, systemPrompt);
     const event = result.decision === 'allow' ? 'allow' : 'ask';
     const reason = result.decision === 'allow' ? REASON_AUTO_ALLOW : REASON_NOT_AUTO_ALLOW;
-    log(event, {
-      cmd,
-      来源: 'llm',
-      判定: result.decision,
-      模型: model,
-      耗时: `${result.durationMs}ms`,
-      重试: result.attempts,
-      'LLM 响应': fenceInline(result.raw),
-      命令长度: cmd.length,
-      详情: reason,
-    });
+    log(event, { cmd, source: 'llm', detail: reason });
     return emit(result.decision, reason);
   } catch (e) {
     const reason = `自动放行判定异常: ${errMsg(e)}`;
-    log('error', { cmd, 来源: 'llm', 详情: reason });
+    log('error', { cmd, source: 'llm', detail: reason });
     return emit('ask', reason);
   }
 }
@@ -80,20 +70,15 @@ async function classifyWithRetry(cmd, model, systemPrompt) {
   /** @type {unknown} */
   let lastErr;
   for (let attempt = 0; attempt <= MAX_RETRIES; attempt++) {
-    const startedAt = Date.now();
     try {
       const { decision, raw, durationMs } = await classify(cmd, model, systemPrompt);
       return { decision, raw, durationMs, attempts: attempt };
     } catch (e) {
-      const durationMs = Date.now() - startedAt;
       lastErr = e;
       log('retry', {
         cmd,
-        来源: 'llm',
-        模型: model,
-        耗时: `${durationMs}ms`,
-        重试: `${attempt + 1}/${MAX_RETRIES + 1}`,
-        详情: `调用失败: ${errMsg(e)}`,
+        source: 'llm',
+        detail: `调用失败: ${errMsg(e)}`,
       });
     }
   }
