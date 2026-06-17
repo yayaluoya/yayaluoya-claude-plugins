@@ -1,7 +1,7 @@
 {
   "name": "@yayaluoya-claude-plugins/auto-allow-bash-plugin",
   "version": "0.1.15",
-  "description": "自动放行只读 Bash 命令 — 本地正则 + LLM 双重判定",
+  "description": "自动放行只读 Bash / PowerShell 命令 — 本地正则 + LLM 双重判定",
   "type": "module",
   "private": false,
   "repository": {

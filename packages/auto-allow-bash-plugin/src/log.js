@@ -22,18 +22,19 @@ function formatTs(d) {
 
 /**
  * 追加一条判定日志，每条记录一行。
- * 格式：2026-06-09 14:23:01 [event/source] cmd | detail
+ * 格式：2026-06-09 14:23:01 [event/source] (shell) cmd | detail
  * @param {string} event 事件类型（recv/allow/ask/retry/error/fatal/skip）
- * @param {{ cmd?: string, source?: string, detail?: string }} meta
+ * @param {{ cmd?: string, shell?: string, source?: string, detail?: string }} meta
  */
 export function log(event, meta = {}) {
   const now = new Date();
   const ts = formatTs(now);
   const source = meta.source ? `/${meta.source}` : '';
   const tag = `[${event}${source}]`;
+  const shell = meta.shell ? ` (${meta.shell})` : '';
   const cmd = meta.cmd ? ` ${meta.cmd.replace(/\n/g, ' ')}` : '';
   const extra = meta.detail ? ` | ${meta.detail}` : '';
-  const line = `${ts} ${tag}${cmd}${extra}\n`;
+  const line = `${ts} ${tag}${shell}${cmd}${extra}\n`;
   fs.mkdirSync(LOG_DIR, { recursive: true });
   fs.appendFileSync(getLogFile(now), line);
 }

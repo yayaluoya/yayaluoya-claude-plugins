@@ -9,9 +9,10 @@ const DIST = path.resolve(__dirname, '../dist/auto-allow-bash.mjs');
  * 模拟 Claude Code 调用 hook：把 JSON 写入 stdin，收集 stdout 输出。
  * 不做断言，只把判定结果原样返回，交给调用方打印。
  * @param {object} toolInput
+ * @param {string} [toolName] 工具名（Bash / PowerShell），缺省按 Bash 处理
  * @returns {Promise<{ decision: string, reason: string, ms: number, error?: string }>}
  */
-function callHook(toolInput) {
+function callHook(toolInput, toolName) {
   return new Promise((resolve) => {
     const startedAt = Date.now();
     const child = spawn('node', [DIST], { stdio: ['pipe', 'pipe', 'pipe'] });
@@ -28,7 +29,8 @@ function callHook(toolInput) {
         resolve({ decision: '?', reason: '', ms, error: `exit ${code} stdout=${stdout} stderr=${stderr}` });
       }
     });
-    child.stdin.write(JSON.stringify({ tool_input: toolInput }));
+    const payload = toolName ? { tool_name: toolName, tool_input: toolInput } : { tool_input: toolInput };
+    child.stdin.write(JSON.stringify(payload));
     child.stdin.end();
   });
 }
@@ -42,10 +44,10 @@ function printResult(cmd, r) {
 }
 
 /** 跑一组命令并逐条打印。 */
-async function runGroup(title, cmds) {
+async function runGroup(title, cmds, toolName) {
   console.log(`\n===== ${title} =====`);
   for (const cmd of cmds) {
-    const r = await callHook({ command: cmd });
+    const r = await callHook({ command: cmd }, toolName);
     printResult(cmd, r);
   }
 }
@@ -78,6 +80,27 @@ const GROUPS = [
   ]],
 ];
 
+const PS_GROUPS = [
+  ['PowerShell 本地只读规则（应快速 allow，不调 LLM）', [
+    'Get-ChildItem',
+    'Get-Process | Where-Object { $_.CPU -gt 10 }',
+    'git status',
+    'Test-Path package.json',
+    'Get-Content README.md | Select-Object -First 20',
+    'Get-ChildItem 2>$null',
+  ]],
+  ['PowerShell 写/危险命令（不走本地，交 LLM 或人工）', [
+    'Remove-Item foo.txt',
+    'Set-Content a.txt "x"',
+    'echo x > a.txt',
+    '[System.IO.File]::Delete("x")',
+    'Invoke-WebRequest https://example.com',
+  ]],
+];
+
 for (const [title, cmds] of GROUPS) {
-  await runGroup(title, cmds);
+  await runGroup(title, cmds, 'Bash');
+}
+for (const [title, cmds] of PS_GROUPS) {
+  await runGroup(title, cmds, 'PowerShell');
 }

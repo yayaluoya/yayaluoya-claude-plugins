@@ -6,7 +6,7 @@ description: 配置 auto-allow-bash-plugin 的 LLM 判定系统提示词
 
 该插件通过 `~/.claude/auto-allow-bash-plugin.md` 的 frontmatter 读取用户配置，目前支持以下字段：
 
-- `system_prompt`：覆盖 LLM 判定时使用的系统提示词。未配置时使用内置默认值。
+- `system_prompt`：覆盖 LLM 判定时使用的系统提示词（同时适用于 Bash 与 PowerShell 命令）。未配置时使用内置默认值。
 - `model`：覆盖 LLM 判定使用的模型 ID。未配置时使用内置默认值 `claude-haiku-4-5-20251001`。
 
 ## 你的任务
