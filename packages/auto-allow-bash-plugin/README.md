@@ -42,7 +42,7 @@ system_prompt: |
 
 ## 日志
 
-每次判定追加一行到 `~/.claude/auto-allow-bash-plugin/log/<YYYY-MM-DD>.txt`，记录命令内容、判定来源（`local` / `llm`）、模型、耗时、重试次数等，便于事后审计和规则调优。
+每次判定追加一行到 `~/.claude/auto-allow-bash-plugin/log/<YYYY-MM-DD>.txt`，格式为 `时间 [事件/来源] (shell) 命令 | 详情`，记录判定事件（`recv`/`allow`/`ask`/`retry`/`error` 等）、判定来源（`local` / `llm`）、命令所属 shell（`Bash` / `PowerShell`）和命令内容，便于事后审计和规则调优。
 
 ## 安装
 
