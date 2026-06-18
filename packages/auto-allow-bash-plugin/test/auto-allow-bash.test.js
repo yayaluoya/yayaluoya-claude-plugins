@@ -83,7 +83,7 @@ const GROUPS = [
 const PS_GROUPS = [
   ['PowerShell 本地只读规则（应快速 allow，不调 LLM）', [
     'Get-ChildItem',
-    'Get-Process | Where-Object { $_.CPU -gt 10 }',
+    'Get-Process | Select-Object Name, CPU',
     'git status',
     'Test-Path package.json',
     'Get-Content README.md | Select-Object -First 20',
@@ -95,6 +95,13 @@ const PS_GROUPS = [
     'echo x > a.txt',
     '[System.IO.File]::Delete("x")',
     'Invoke-WebRequest https://example.com',
+  ]],
+  ['PowerShell 旁路防御（不可本地放行，否则等于无人工确认放行写操作）', [
+    'Get-ChildItem | ForEach-Object { Remove-Item $_.FullName }', // 脚本块内写操作
+    'Get-Process | Where-Object { $_.CPU -gt 10 }',               // 脚本块本身不可信，整体不放行
+    'Get-Content x 1> out.txt',                                   // 编号流重定向写文件
+    'Get-Content x 3> w.txt',                                     // 警告流重定向写文件
+    '& script.ps1',                                               // 调用操作符执行外部脚本
   ]],
 ];
 
