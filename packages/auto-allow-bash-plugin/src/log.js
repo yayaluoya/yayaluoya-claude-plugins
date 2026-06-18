@@ -21,28 +21,20 @@ function formatTs(d) {
 }
 
 /**
- * 把字符串包成行内代码，转义内部反引号，供日志中展示 LLM 原始响应。
- * @param {unknown} s
- */
-export function fenceInline(s) {
-  const t = String(s ?? '').replace(/`/g, '​`');
-  return `\`${t}\``;
-}
-
-/**
  * 追加一条判定日志，每条记录一行。
- * 格式：2026-06-09 14:23:01 [event/来源] cmd
+ * 格式：2026-06-09 14:23:01 [event/source] (shell) cmd | detail
  * @param {string} event 事件类型（recv/allow/ask/retry/error/fatal/skip）
- * @param {Record<string, any>} meta
+ * @param {{ cmd?: string, shell?: string, source?: string, detail?: string }} meta
  */
 export function log(event, meta = {}) {
   const now = new Date();
   const ts = formatTs(now);
-  const source = meta['来源'] ? `/${meta['来源']}` : '';
+  const source = meta.source ? `/${meta.source}` : '';
   const tag = `[${event}${source}]`;
+  const shell = meta.shell ? ` (${meta.shell})` : '';
   const cmd = meta.cmd ? ` ${meta.cmd.replace(/\n/g, ' ')}` : '';
-  const extra = meta['详情'] ? ` | ${meta['详情']}` : '';
-  const line = `${ts} ${tag}${cmd}${extra}\n`;
+  const extra = meta.detail ? ` | ${meta.detail}` : '';
+  const line = `${ts} ${tag}${shell}${cmd}${extra}\n`;
   fs.mkdirSync(LOG_DIR, { recursive: true });
   fs.appendFileSync(getLogFile(now), line);
 }
