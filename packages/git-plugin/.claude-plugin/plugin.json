@@ -1,7 +1,7 @@
 {
   "name": "git-plugin",
   "version": "0.1.15",
-  "description": "Git 工作流命令 — 按项目历史风格生成中文 commit 等",
+  "description": "Git 工作流命令 — 中文 commit、智能创建分支等",
   "author": {
     "name": "yayaluoya"
   }
