@@ -10,9 +10,10 @@ const DIST = path.resolve(__dirname, '../dist/auto-allow-bash.mjs');
  * 不做断言，只把判定结果原样返回，交给调用方打印。
  * @param {object} toolInput
  * @param {string} [toolName] 工具名（Bash / PowerShell），缺省按 Bash 处理
+ * @param {string} [permissionMode] 权限模式，缺省不带该字段
  * @returns {Promise<{ decision: string, reason: string, ms: number, error?: string }>}
  */
-function callHook(toolInput, toolName) {
+function callHook(toolInput, toolName, permissionMode) {
   return new Promise((resolve) => {
     const startedAt = Date.now();
     const child = spawn('node', [DIST], { stdio: ['pipe', 'pipe', 'pipe'] });
@@ -22,6 +23,11 @@ function callHook(toolInput, toolName) {
     child.stderr.on('data', (d) => (stderr += d));
     child.on('close', (code) => {
       const ms = Date.now() - startedAt;
+      // 退出码 0 且无 stdout：defer（不做决策，交回系统流程）——正常结果而非异常。
+      if (code === 0 && stdout.trim() === '') {
+        resolve({ decision: 'defer', reason: '交回系统默认流程', ms });
+        return;
+      }
       try {
         const hs = JSON.parse(stdout).hookSpecificOutput;
         resolve({ decision: hs.permissionDecision, reason: hs.permissionDecisionReason || '', ms });
@@ -29,7 +35,10 @@ function callHook(toolInput, toolName) {
         resolve({ decision: '?', reason: '', ms, error: `exit ${code} stdout=${stdout} stderr=${stderr}` });
       }
     });
-    const payload = toolName ? { tool_name: toolName, tool_input: toolInput } : { tool_input: toolInput };
+    /** @type {Record<string, unknown>} */
+    const payload = { tool_input: toolInput };
+    if (toolName) payload.tool_name = toolName;
+    if (permissionMode) payload.permission_mode = permissionMode;
     child.stdin.write(JSON.stringify(payload));
     child.stdin.end();
   });
@@ -44,10 +53,10 @@ function printResult(cmd, r) {
 }
 
 /** 跑一组命令并逐条打印。 */
-async function runGroup(title, cmds, toolName) {
+async function runGroup(title, cmds, toolName, permissionMode) {
   console.log(`\n===== ${title} =====`);
   for (const cmd of cmds) {
-    const r = await callHook({ command: cmd }, toolName);
+    const r = await callHook({ command: cmd }, toolName, permissionMode);
     printResult(cmd, r);
   }
 }
@@ -110,4 +119,19 @@ for (const [title, cmds] of GROUPS) {
 }
 for (const [title, cmds] of PS_GROUPS) {
   await runGroup(title, cmds, 'PowerShell');
+}
+
+// 权限模式：免确认模式（bypassPermissions/auto/plan）应直接 defer，不调 LLM；
+// 其余模式走完整分类。这里用一条本地未命中的只读命令，最能区分两种路径：
+// - 免确认模式 → defer（毫秒级，无 LLM）
+// - default/acceptEdits/dontAsk → 走 LLM 判定（allow）
+console.log('\n===== 权限模式：免确认模式应直接 defer（不调 LLM） =====');
+for (const mode of ['bypassPermissions', 'auto', 'plan']) {
+  const r = await callHook({ command: 'grep -rn "TODO" src' }, 'Bash', mode);
+  printResult(`[${mode}] grep -rn "TODO" src`, r);
+}
+console.log('\n===== 权限模式：需判定模式应走完整分类 =====');
+for (const mode of ['default', 'acceptEdits', 'dontAsk']) {
+  const r = await callHook({ command: 'ls -la' }, 'Bash', mode);
+  printResult(`[${mode}] ls -la`, r);
 }

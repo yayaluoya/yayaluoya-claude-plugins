@@ -11,6 +11,15 @@ const REASON_LOCAL_ALLOW = '本地只读规则快速放行';
 const REASON_NOT_AUTO_ALLOW = '未命中自动放行规则，需人工确认';
 
 /**
+ * 这些权限模式（permission_mode）下做命令分类毫无意义，直接放手交回系统默认流程：
+ * - bypassPermissions：命令本就免确认直接执行，放行是多余的；
+ * - auto：系统自带后台安全检查并自动放行，再判一遍只会和它抢决策（甚至误弹确认框）；
+ * - plan：Claude 只会尝试只读命令探索，天然安全，无需判定。
+ * 其余模式（default / acceptEdits / dontAsk）及未知/缺失模式一律走完整分类（fail-safe）。
+ */
+const SKIP_MODES = new Set(['bypassPermissions', 'auto', 'plan']);
+
+/**
  * 从任意 catch 到的异常中提取可读信息。
  * @param {unknown} e
  * @returns {string}
@@ -31,11 +40,19 @@ async function main() {
   let cmd = '';
   /** @type {'Bash' | 'PowerShell'} */
   let shell = 'Bash';
+  let permissionMode = '';
   try {
     const input = JSON.parse(buf || '{}');
     cmd = (input && input.tool_input && input.tool_input.command) || '';
     shell = normalizeShell(input && input.tool_name);
+    permissionMode = (input && typeof input.permission_mode === 'string') ? input.permission_mode : '';
   } catch {}
+
+  // 免确认模式下分类无意义，直接 defer（不输出决策）交回系统默认流程。
+  if (SKIP_MODES.has(permissionMode)) {
+    log('skip', { cmd, shell, detail: `权限模式 ${permissionMode} 无需判定，交回系统` });
+    return defer();
+  }
 
   if (!cmd.trim()) {
     log('skip', { shell, detail: '命令为空或解析失败' });
@@ -127,6 +144,14 @@ async function classify(cmd, model, systemPrompt, shell = 'Bash') {
   const raw = String(text ?? '');
   const decision = raw.trim().toLowerCase() === 'allow' ? 'allow' : 'ask';
   return { decision, raw, durationMs };
+}
+
+/**
+ * 不做任何决策：退出码 0 且不输出 JSON，Claude Code 会让命令继续走正常权限流程。
+ * 用于免确认权限模式下跳过分类，避免徒劳调用 LLM，也不会误弹确认框。
+ */
+function defer() {
+  // 不写 stdout，进程正常退出即可。
 }
 
 /**
