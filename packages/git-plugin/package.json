@@ -1,6 +1,6 @@
 {
   "name": "@yayaluoya-claude-plugins/git-plugin",
-  "version": "0.1.16",
+  "version": "0.1.17",
   "description": "Git 工作流命令 — 中文 commit、智能创建分支等",
   "type": "module",
   "private": false,

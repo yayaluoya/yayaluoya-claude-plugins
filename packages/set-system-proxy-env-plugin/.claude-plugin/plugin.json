@@ -1,6 +1,6 @@
 {
   "name": "set-system-proxy-env-plugin",
-  "version": "0.1.16",
+  "version": "0.1.17",
   "description": "读取系统代理配置并同步到 ~/.claude/settings.json 的 env 字段（命令触发）",
   "author": {
     "name": "yayaluoya"
