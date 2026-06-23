@@ -6,7 +6,9 @@
 
 通过 `PreToolUse` hook 拦截所有 `Bash` 与 `PowerShell` 工具调用。
 
-首先按权限模式（permission mode）短路：在 `bypassPermissions`、`auto`、`plan` 这三种本就免人工确认的模式下，做命令分类毫无意义，hook 直接放手（defer，不输出决策），交回 Claude Code 默认权限流程，既不浪费 LLM 调用，也不会误弹确认框。其余模式（`default` / `acceptEdits` / `dontAsk`）及未知/缺失模式一律走完整分类（fail-safe）。
+进入判定前先做防御性校验：只有 `hook_event_name` 为 `PreToolUse` 且 `tool_name` 为 `Bash` / `PowerShell` 时才参与判定，否则（事件名或工具名不符、字段缺失）直接放手（defer）交回系统，绝不对未知工具下决策。
+
+接着按权限模式（permission mode）短路：在 `bypassPermissions`、`auto`、`plan` 这三种本就免人工确认的模式下，做命令分类毫无意义，hook 直接放手（defer，不输出决策），交回 Claude Code 默认权限流程，既不浪费 LLM 调用，也不会误弹确认框。其余模式（`default` / `acceptEdits` / `dontAsk`）及未知/缺失模式一律走完整分类（fail-safe）。
 
 需要分类时执行双重判定：
 

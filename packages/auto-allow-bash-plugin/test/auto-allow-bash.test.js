@@ -9,11 +9,12 @@ const DIST = path.resolve(__dirname, '../dist/auto-allow-bash.mjs');
  * 模拟 Claude Code 调用 hook：把 JSON 写入 stdin，收集 stdout 输出。
  * 不做断言，只把判定结果原样返回，交给调用方打印。
  * @param {object} toolInput
- * @param {string} [toolName] 工具名（Bash / PowerShell），缺省按 Bash 处理
+ * @param {string} [toolName] 工具名，默认 'Bash'。显式传 null 则不带该字段（测试缺失校验）。
  * @param {string} [permissionMode] 权限模式，缺省不带该字段
+ * @param {string} [hookEventName] 事件名，默认 'PreToolUse'。显式传 null 则不带该字段（测试缺失校验）。
  * @returns {Promise<{ decision: string, reason: string, ms: number, error?: string }>}
  */
-function callHook(toolInput, toolName, permissionMode) {
+function callHook(toolInput, toolName = 'Bash', permissionMode, hookEventName = 'PreToolUse') {
   return new Promise((resolve) => {
     const startedAt = Date.now();
     const child = spawn('node', [DIST], { stdio: ['pipe', 'pipe', 'pipe'] });
@@ -39,6 +40,7 @@ function callHook(toolInput, toolName, permissionMode) {
     const payload = { tool_input: toolInput };
     if (toolName) payload.tool_name = toolName;
     if (permissionMode) payload.permission_mode = permissionMode;
+    if (hookEventName) payload.hook_event_name = hookEventName;
     child.stdin.write(JSON.stringify(payload));
     child.stdin.end();
   });
@@ -134,4 +136,20 @@ console.log('\n===== 权限模式：需判定模式应走完整分类 =====');
 for (const mode of ['default', 'acceptEdits', 'dontAsk']) {
   const r = await callHook({ command: 'ls -la' }, 'Bash', mode);
   printResult(`[${mode}] ls -la`, r);
+}
+
+// 防御性校验：非 PreToolUse 事件、或非 Bash/PowerShell 工具、或字段缺失时，
+// 应直接 defer（毫秒级，不下决策、不调 LLM），绝不对未知工具放行。
+console.log('\n===== 防御性校验：非预期调用应直接 defer =====');
+const GUARD_CASES = [
+  // [说明, toolInput, toolName, permissionMode, hookEventName]
+  ['错误事件名 PostToolUse', { command: 'ls -la' }, 'Bash', undefined, 'PostToolUse'],
+  ['缺失事件名', { command: 'ls -la' }, 'Bash', undefined, null],
+  ['不支持的工具 Read', { file_path: 'a.txt' }, 'Read', undefined, 'PreToolUse'],
+  ['不支持的工具 Edit', { file_path: 'a.txt' }, 'Edit', undefined, 'PreToolUse'],
+  ['缺失工具名', { command: 'ls -la' }, null, undefined, 'PreToolUse'],
+];
+for (const [desc, toolInput, toolName, mode, eventName] of GUARD_CASES) {
+  const r = await callHook(toolInput, toolName, mode, eventName);
+  printResult(`[${desc}]`, r);
 }
